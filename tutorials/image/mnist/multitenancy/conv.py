@@ -31,7 +31,7 @@ class Mnist():
             validation_size = 5000,
             seed = 66478,
             batch_size = 64,
-            num_epochs = 10,
+            num_epochs = 2,
             eval_batch_size = 64,
             eval_frequency = 100,
             flags = Flags() 
@@ -312,8 +312,8 @@ class Mnist():
                     sys.stdout.flush()
 
             # Finally print the result!
-            test_error = self.error_rate(self.eval_in_batches(test_data, sess), test_labels)
-            print('Test error: %1f%%' % test_error)
+            test_error = self.error_rate(eval_in_batches(test_data, sess), test_labels)
+            print('Test error: %.1f%%' % test_error)
             if self.flags.self_test:
                 print('test_error', test_error)
                 assert test_error == 0.0, 'expected 0.0 test_error, got %.2f' % (test_error,)
@@ -321,7 +321,7 @@ class Mnist():
     def run(self):
         self.main()
 
-#if '__name__' == '__main__':
-mnist = Mnist()
-mnist.run()
+if __name__ == '__main__':
+    mnist = Mnist()
+    mnist.run()
     

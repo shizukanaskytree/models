@@ -95,3 +95,13 @@ ENV/
 .DS_Store
 
 samples/outreach/blogs/segmentation_blogpost/carvana-image-masking-challenge/
+
+# .nvvp
+*.nvvp
+
+# vim swap
+*.swp
+
+# mnist example dataset
+tutorials/image/mnist/data/
+tutorials/image/mnist/multitenancy/data/

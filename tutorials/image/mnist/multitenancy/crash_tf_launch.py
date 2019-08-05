@@ -1,13 +1,10 @@
 import threading 
 import conv 
+import crash_tf_conv 
 
 if __name__ == '__main__':
-
-    print('Thread name: ',threading.current_thread().getName(),
-          ' thread id: ', threading.current_thread().ident)
-
     mnist01 = conv.Mnist()
-    mnist02 = conv.Mnist()
+    mnist02 = crash_tf_conv.Mnist()
 
     # Note: target is only the name of the function!
     t1 = threading.Thread(target=mnist01.run, name="t1")

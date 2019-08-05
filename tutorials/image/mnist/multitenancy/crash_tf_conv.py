@@ -60,7 +60,7 @@ class Mnist():
             filepath, _ = urllib.request.urlretrieve(self.source_url + filename, filepath)
             with tf.gfile.GFile(filepath) as f:
                 size = f.size()
-            print('Successfully download', filename, size, 'bytes.')
+            print('High Priority - Successfully download', filename, size, 'bytes.')
         return filepath
 
     def data_type(self):
@@ -75,7 +75,7 @@ class Mnist():
         
         Values are rescaled from [0, 255] down to [-0.5, 0.5]
         """
-        print('Extracting', filename)
+        print('High Priority - Extracting', filename)
         with gzip.open(filename) as bytestream:
             # In order to skip the first 16 bytes
             bytestream.read(16)
@@ -88,7 +88,7 @@ class Mnist():
 
     def extract_labels(self, filename, num_images):
         """Extract the labels into a vector of int64 label IDs"""
-        print('Extracting', filename)
+        print('High Priority - Extracting', filename)
         with gzip.open(filename) as bytestream:
             bytestream.read(8)
             buf = bytestream.read(1*num_images)
@@ -115,8 +115,16 @@ class Mnist():
                 predictions.shape[0])
 
     def main(self):
+        # explicitly construct a graph with priority value passed in.
+        #g = tf.Graph(graph_priority = 1)
+        #tf.set_default_graph(g)
+        tf.set_execution_priority(1)
+
+        print('High Priority - crash_tf Thread name: ',threading.current_thread().getName(),
+              ' thread id: ', threading.current_thread().ident)
+
         if self.flags.self_test:
-            print('Running self-test.')
+            print('High Priority - Running self-test.')
             train_data, train_labels = self.fake_data(256)
             validation_data, validation_labels = self.fake_data(self.eval_batch_size)
             test_data, test_labels = self.fake_data(self.eval_batch_size)
@@ -145,9 +153,6 @@ class Mnist():
         ###############################################################################
         ###############################################################################
         ###############################################################################
-        print(os.getpid())
-        print('Thread name: ',threading.current_thread().getName(),
-            ' thread id: ', threading.current_thread().ident)
         # This is where training samples and labels are fed to the graph.
         # These placeholder nodes will be fed a batch of training data at each
         # training step using the {feed_dict} argument to the Run() call below.
@@ -291,7 +296,7 @@ class Mnist():
         with tf.Session() as sess:
             # Run all the initializers to prepare the trainable parameters.
             tf.global_variables_initializer().run()
-            print('Initialized!')
+            print('High Priority - Initialized!')
             # Loop through training steps.
             for step in xrange(int(num_epochs * train_size) // self.batch_size):
                 # Compute the offset of the current minibatch in the data
@@ -307,25 +312,28 @@ class Mnist():
                 sess.run(optimizer, feed_dict=feed_dict)
                 # print same extra information once reach the evaluation frequency
                 if step % self.eval_frequency == 0:
+                    # test stop tf
                     # fetch some extra nodes' data
                     l, lr, predictions = sess.run([loss, learning_rate, train_prediction],
                                                  feed_dict=feed_dict)
                     elapsed_time = time.time() - start_time
                     start_time = time.time()
-                    print('Step %d (epoch %.2f), %.1f ms' %
+                    print('High Priority - Step %d (epoch %.2f), %.1f ms' %
                             (step, float(step) * self.batch_size / train_size,
                                 1000 * elapsed_time / self.eval_frequency))
-                    print('Minibatch loss: %.3f, learning rate: %.6f' % (l, lr))
-                    print('Minibatch error: %.1f%%' % self.error_rate(predictions, batch_labels))
-                    print('Validation error: %.1f%%' % self.error_rate(
+                    print('High Priority - Minibatch loss: %.3f, learning rate: %.6f' % (l, lr))
+                    print('High Priority - Minibatch error: %.1f%%' % self.error_rate(predictions, batch_labels))
+                    print('High Priority - Validation error: %.1f%%' % self.error_rate(
                         eval_in_batches(validation_data, sess), validation_labels))
                     sys.stdout.flush()
+                    # 我自己写的，gdb 可以
+                    # os.environ["TF_TO_STOP_SCHED"] = "1"
 
             # Finally print the result!
             test_error = self.error_rate(eval_in_batches(test_data, sess), test_labels)
-            print('Test error: %.1f%%' % test_error)
+            print('High Priority - Test error: %.1f%%' % test_error)
             if self.flags.self_test:
-                print('test_error', test_error)
+                print('High Priority - test_error', test_error)
                 assert test_error == 0.0, 'expected 0.0 test_error, got %.2f' % (test_error,)
 
     def run(self):

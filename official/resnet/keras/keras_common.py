@@ -33,7 +33,9 @@ from tensorflow.python.keras.optimizer_v2 import (gradient_descent as
                                                   gradient_descent_v2)
 
 FLAGS = flags.FLAGS
+# DONE
 BASE_LEARNING_RATE = 0.1  # This matches Jing's version.
+# DONE
 TRAIN_TOP_1 = 'training_accuracy_top_1'
 
 

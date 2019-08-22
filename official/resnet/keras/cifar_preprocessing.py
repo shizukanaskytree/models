@@ -24,6 +24,7 @@ import tensorflow as tf
 
 from official.resnet.keras import imagenet_preprocessing
 
+# --DONE
 HEIGHT = 32
 WIDTH = 32
 NUM_CHANNELS = 3
@@ -38,7 +39,7 @@ NUM_IMAGES = {
 }
 _NUM_DATA_FILES = 5
 NUM_CLASSES = 10
-
+## ~~DONE
 
 def parse_record(raw_record, is_training, dtype):
   """Parses a record containing a training example of an image.
@@ -85,7 +86,9 @@ def preprocess_image(image, is_training):
   """Preprocess a single image of layout [height, width, depth]."""
   if is_training:
     # Resize the image to add four extra pixels on each side.
-    image = tf.image.resize_with_crop_or_pad(
+    #image = tf.image.resize_with_crop_or_pad(
+    #    image, HEIGHT + 8, WIDTH + 8)
+    image = tf.image.resize_image_with_crop_or_pad(
         image, HEIGHT + 8, WIDTH + 8)
 
     # Randomly crop a [HEIGHT, WIDTH] section of the image.

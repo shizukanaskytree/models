@@ -381,6 +381,8 @@ def run_imagenet(flags_obj):
 
 
 def main(_):
+  # Test by wxf
+  #tf.set_execution_priority(2)
   with logger.benchmark_context(flags.FLAGS):
     run_imagenet(flags.FLAGS)
 

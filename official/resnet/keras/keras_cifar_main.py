@@ -30,7 +30,7 @@ from official.utils.logs import logger
 from official.utils.misc import distribution_utils
 from official.utils.misc import keras_utils
 
-
+# DONE
 LR_SCHEDULE = [  # (multiplier, epoch to start) tuples
     (0.1, 91), (0.01, 136), (0.001, 182)
 ]

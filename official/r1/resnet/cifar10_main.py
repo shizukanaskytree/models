@@ -93,8 +93,10 @@ def preprocess_image(image, is_training):
   """Preprocess a single image of layout [height, width, depth]."""
   if is_training:
     # Resize the image to add four extra pixels on each side.
-    image = tf.image.resize_with_crop_or_pad(
+    image = tf.image.resize_image_with_crop_or_pad(
         image, HEIGHT + 8, WIDTH + 8)
+#    image = tf.image.resize_with_crop_or_pad(
+#        image, HEIGHT + 8, WIDTH + 8)
 
     # Randomly crop a [HEIGHT, WIDTH] section of the image.
     image = tf.image.random_crop(image, [HEIGHT, WIDTH, NUM_CHANNELS])
@@ -273,6 +275,9 @@ def run_cifar(flags_obj):
         '--image_bytes_as_serving_input cannot be set to True for CIFAR. '
         'This flag is only applicable to ImageNet.')
     return
+
+  # Test by wxf
+  #tf.set_execution_priority(2)
 
   input_function = (flags_obj.use_synthetic_data and
                     get_synth_input_fn(flags_core.get_tf_dtype(flags_obj)) or
